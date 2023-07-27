@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+        {% block title %}{% endblock %}
+		<title>HouseStats</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', path='css/custom_style.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', path='css/stoled.css') }}" />
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<div id="header">
+            {% block header %}{% endblock %}
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+                {% block content %}{% endblock %}
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+                {% block footer %}{% endblock %}
+			</div>
+
+		<!-- Scripts
+			<script src="static/js/jquery.min.js"></script>
+			<script src="static/js/jquery.scrolly.min.js"></script>
+			<script src="static/js/jquery.scrollex.min.js"></script>
+			<script src="static/js/browser.min.js"></script>
+			<script src="static/js/breakpoints.min.js"></script>
+			<script src="static/js/util.js"></script>
+			<script src="static/js/main.js"></script>
+			-->
+
+			<script src="{{ url_for('static', path='js/jquery.min.js') }}"></script>
+			<!--<script src="{{ url_for('static', path='js/jquery.scrolly.min.js') }}"></script>-->
+			<!--<script src="{{ url_for('static', path='js/jquery.scrollex.min.js') }}"></script>-->
+			<script src="{{ url_for('static', path='js/browser.min.js') }}"></script>
+			<script src="{{ url_for('static', path='js/breakpoints.min.js') }}"></script>
+			<script src="{{ url_for('static', path='js/util.js') }}"></script>
+			<script src="{{ url_for('static', path='js/main.js') }}"></script>
+			<script src="{{ url_for('static', path='js/stoled.js') }}"></script>
+	</body>
+</html>
