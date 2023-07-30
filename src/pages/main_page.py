@@ -15,3 +15,8 @@ templates = Jinja2Templates(directory="templates")
 def get_main_page(request: Request):
     parsed_data = parse_yandex(limit=6)
     return templates.TemplateResponse("index.html", {"request": request, "content": parsed_data})
+
+
+@router.post("/")
+def filter_parsed_data(request: Request):
+    pass
