@@ -3,14 +3,15 @@ import os
 
 
 # Создание графика
-def create_chart():
-    # Ваш код для создания графика с использованием Matplotlib
+def create_chart(data: dict, compared_values: list):
 
-    x = [1, 2, 3, 4, 5]
-    y = [2, 4, 6, 8, 10]
-    plt.plot(x, y)
-    plt.xlabel('X')
-    plt.ylabel('Y')
+    x_values = [sub_dict[compared_values[0]] for sub_dict in data.values()]
+    y_values = [sub_dict[compared_values[1]] for sub_dict in data.values()]
+
+    plt.scatter(x_values, y_values)
+
+    plt.xlabel(compared_values[0])
+    plt.ylabel(compared_values[1])
     plt.title('Статистический график')
 
     # Assuming your static directory is located in the same directory as your Python file
@@ -19,4 +20,3 @@ def create_chart():
     # Сохранение графика во временный файл
     plt.savefig(static_dir)
 
-create_chart()

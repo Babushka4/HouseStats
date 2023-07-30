@@ -1,29 +1,32 @@
 from bs4 import BeautifulSoup
-import json
 import requests
+from src.parser.stat_analize import create_chart
 
 
-def parse_yandex_subpage(url: str):
-    request = requests.get(url)
-    bs = BeautifulSoup(request.text, 'html.parser')
+def parse_yandex_subpage(url_list: list):
+    amount_data = {}
+    for url in url_list:
+        request = requests.get(url)
+        bs = BeautifulSoup(request.text, 'html.parser')
 
-    data_div = bs.find_all('div', ['OfferCard__techFeatures--1YKu1 OfferCardHighlights__root--2XIOU'])[0]
+        meter_and_room = bs.find_all('div', ['OfferCardSummaryInfo__description--1eQMI'])[0].text.replace('\xa0', '')
+        i = meter_and_room.index('²') + 1
+        meter_count = meter_and_room[:i -2].replace(',', '.')
+        room_count = meter_and_room[i+2: i+3]
+        meter_cost = bs.find_all('div', ['OfferCardSummaryInfo__pricePerMeterExtra--3Onhy'])[0].text.replace('\xa0', '')[:-7]
 
-    values = [div.text.replace('\xa0', '') for div in data_div.find_all('div',
-                                                                        ['OfferCardHighlights__featureValue--2wfJ7'])]
+        total_cost = bs.find_all('span',
+                                 ['OfferCardSummaryInfo__price--3WinQ OfferCardSummaryInfo__priceWithLeftMargin--dZLTe'])[0].text.replace('\xa0', '')[:-2]
 
-    cost = bs.find_all('div', ['OfferCardFeature__text--3NIwE'])[0].text.replace('\xa0', '')
-    total_cost = bs.find_all('span',
-                             ['OfferCardSummaryInfo__price--3WinQ OfferCardSummaryInfo__priceWithLeftMargin--dZLTe'])[0].text.replace('\xa0', '')
+        result = {
+            'Площадь': float(meter_count),
+            'Комнат': int(room_count),
+            'Цена за метр': int(meter_cost),
+            'Итоговая цена': int(total_cost)
+        }
+        amount_data[url] = result
 
-    result = {
-        'square': float(values[0][:-2].replace(',', '.')),
-        'etaj': int(values[1][:-5]),
-        'year': int(values[2][:-4]),
-        'cost_by_meter': int(cost[:-7]),
-        'total_cost': int(total_cost[:-2])
-    }
-    return result
+    return amount_data
 
 
 def parse_yandex(limit: int = -1):
@@ -58,4 +61,8 @@ def parse_yandex(limit: int = -1):
 
 
 if __name__ == '__main__':
-    print(parse_yandex_subpage('https://realty.ya.ru/offer/6116957244935418471/'))
+    to_analize = parse_yandex_subpage(['https://realty.ya.ru/offer/6116957244935418471/',
+                                       'https://realty.ya.ru/offer/3767659616994028669/',
+                                       'https://realty.ya.ru/offer/5069187592276761856/'])
+
+    create_chart(data=to_analize, compared_values=['Цена за метр', 'Итоговая цена'])
